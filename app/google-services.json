@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "651748829511",
+    "project_id": "rorders-66b61",
+    "storage_bucket": "rorders-66b61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651748829511:android:ee6d15d8f7fc9b43484462",
+        "android_client_info": {
+          "package_name": "com.example.rorders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651748829511-s0mcc5rai1gatks7fg0n3neo7737fnak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeaRxoAq9HnkZiEXmwsQ6gqEGFIXs8YrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651748829511-s0mcc5rai1gatks7fg0n3neo7737fnak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
