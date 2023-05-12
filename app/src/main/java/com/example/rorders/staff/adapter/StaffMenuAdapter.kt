@@ -120,8 +120,8 @@ private fun ordering(orderArrayList: ArrayList<OrderListModel>){
 
         //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
         for (i in orderArray.indices) {
-            database.child("status").setValue("0")
-            database.child(tableNum).child(orderArray[i].itemName).setValue(orderArray[i].itemCount)
+            database.child(tableNum).child("menu").child(orderArray[i].itemName).setValue(orderArray[i].itemCount)
+            //database.child(tableNum).child(orderArray[i].itemName).setValue(orderArray[i].itemCount)
             database.child(tableNum).child("status").setValue("0")
         }
     }
