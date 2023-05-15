@@ -64,10 +64,10 @@ class KitchenMainActivity : AppCompatActivity() {
                     var menuItem = ds.key
                     var tableNum:String=""
                     var status=ds.child("status").value.toString()
-if(menuItem.toString()!="status"){
+
     var nmodel=TableListModel(menuItem.toString(),status)
     tableList.add(nmodel)
-}
+
 
 
                     Log.e("TAG", menuItem.toString())

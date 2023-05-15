@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rorders.MainActivity
 import com.example.rorders.R
+import com.example.rorders.admin.AdminActivity
 import com.example.rorders.admin.AdminMainActivity
 import com.example.rorders.constants.PreferenceManager
 import com.example.rorders.kitchen.KitchenMainActivity

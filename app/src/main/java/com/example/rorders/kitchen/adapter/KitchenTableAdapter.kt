@@ -53,14 +53,52 @@ class KitchenTableAdapter (
 detailList=ArrayList()
         detailListCount=ArrayList()
 
-
+        var tables: TableListModel = tableList.get(position)
         number=tableList[position].tableNum.toString()
         holder.tableNum.text="Table " + tableList[position].tableNum
 
+        if (tables.tableStatus == "1")
+        {
+            holder.tableBtn.isChecked = true
+
+        } else
+        {
+            holder.tableBtn.isChecked = false
+
+        }
+        holder.tableBtn.setOnCheckedChangeListener{ buttonView, isChecked ->
+
+            /*database= FirebaseDatabase.getInstance().getReference("StudentLists").
+            child(employee_array.get(position).name.toString()).child("status")*/
+            var database: DatabaseReference
+            if (isChecked)
+            {
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+                database.child("status").setValue("1")
+                Log.e("Checked_Success",isChecked.toString())
+
+                holder.tableBtn.isChecked = true
+
+                /*database.setValue("0")
+                        holder.switch_button.isChecked=true*/
+
+            }
+            else
+            {
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+                database.child("status").setValue("0")
+                Log.e("checked_error",isChecked.toString())
+
+                holder.tableBtn.isChecked = false
+                /*database.setValue("1")
+                            holder.switch_button.isChecked=false*/
+
+            }
 
 
+        }
 
-        var firebaseDatabase = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+        var firebaseDatabase = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number).child("menu")
         //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
         firebaseDatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

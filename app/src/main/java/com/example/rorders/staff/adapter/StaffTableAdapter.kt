@@ -72,7 +72,7 @@ var number:String=""
         return tableList.size
     }
 private fun orderDetail(detailOrderRec:RecyclerView){
-    var firebaseDatabase = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+    var firebaseDatabase = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number).child("menu")
     //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
     firebaseDatabase.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {

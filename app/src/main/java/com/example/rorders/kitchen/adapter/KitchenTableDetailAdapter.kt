@@ -46,51 +46,12 @@ class KitchenTableDetailAdapter (
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.detailBtn.isClickable=true
-        var tables: OrderDetailModel = orderDetailList.get(position)
+
 
         holder.itemname.text=orderDetailList[position].itemName
         holder.itemcount.text=orderDetailList[position].itemCount
 
-        if (tables.status == "1")
-        {
-            tableBtn.isChecked = true
 
-        } else
-        {
-           tableBtn.isChecked = false
-
-        }
-        tableBtn.setOnCheckedChangeListener{ buttonView, isChecked ->
-
-            /*database= FirebaseDatabase.getInstance().getReference("StudentLists").
-            child(employee_array.get(position).name.toString()).child("status")*/
-            var database: DatabaseReference
-            if (isChecked)
-            {
-                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
-                database.child("status").setValue("1")
-                Log.e("Checked_Success",isChecked.toString())
-
-                tableBtn.isChecked = true
-
-                /*database.setValue("0")
-                        holder.switch_button.isChecked=true*/
-
-            }
-            else
-            {
-                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
-                database.child("status").setValue("0")
-                Log.e("checked_error",isChecked.toString())
-
-                tableBtn.isChecked = false
-                /*database.setValue("1")
-                            holder.switch_button.isChecked=false*/
-
-            }
-
-
-        }
 
     }
 
