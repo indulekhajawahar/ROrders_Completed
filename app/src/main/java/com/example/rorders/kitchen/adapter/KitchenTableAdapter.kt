@@ -73,7 +73,7 @@ detailList=ArrayList()
             var database: DatabaseReference
             if (isChecked)
             {
-                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(tableList[position].tableNum)
                 database.child("status").setValue("1")
                 Log.e("Checked_Success",isChecked.toString())
 
@@ -85,7 +85,7 @@ detailList=ArrayList()
             }
             else
             {
-                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number)
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(tableList[position].tableNum)
                 database.child("status").setValue("0")
                 Log.e("checked_error",isChecked.toString())
 
