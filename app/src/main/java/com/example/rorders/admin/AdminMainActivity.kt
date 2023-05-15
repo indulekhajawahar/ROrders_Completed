@@ -66,7 +66,7 @@ class AdminMainActivity : AppCompatActivity() {
 
 
     }
-    private fun updatedListing(){
+  /*  private fun updatedListing(){
 
         db.collection("categories").get().addOnSuccessListener {
             for (i in 0..it.documents.size - 1) {
@@ -104,7 +104,7 @@ class AdminMainActivity : AppCompatActivity() {
             }
 
         }
-    }
+    }*/
 
     private fun init() {
         signOutBtn = findViewById(R.id.signout_btn)
@@ -161,6 +161,8 @@ class AdminMainActivity : AppCompatActivity() {
     }
     private fun listing(){
         menuTypeModel= ArrayList()
+        menuCatList= ArrayList()
+        itemListModel=ArrayList()
         db.collection("categories").get().addOnSuccessListener {
             for (i in 0..it.documents.size - 1) {
                 menuCatList.add(i, it.documents[i].id.toString())
