@@ -9,12 +9,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rorders.R
-import com.example.rorders.admin.AdminActivity
 import com.example.rorders.admin.AdminMainActivity
 import com.example.rorders.kitchen.KitchenMainActivity
 import com.example.rorders.staff.StaffMainActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore

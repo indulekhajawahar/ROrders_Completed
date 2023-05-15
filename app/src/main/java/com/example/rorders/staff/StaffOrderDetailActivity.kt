@@ -36,7 +36,7 @@ class StaffOrderDetailActivity:AppCompatActivity() {
     }
     private fun init(){
         heading=findViewById(R.id.heading)
-        heading.text="Order Detais"
+        heading.text="Order Details"
         backBtn=findViewById(R.id.back_btn)
         backBtn.setOnClickListener {
             val i = Intent(nContext, StaffMainActivity::class.java)

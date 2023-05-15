@@ -127,7 +127,8 @@ class AdminMainActivity : AppCompatActivity() {
             addToMenu()
         }
         menuButton.setOnClickListener {
-
+            var intent = Intent(nContext, AdminOrdersActivity::class.java)
+            startActivity(intent)
         }
         /* var firebaseDatabase = FirebaseDatabase.getInstance().getReference("TodaysMenu")
          //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
@@ -162,7 +163,7 @@ class AdminMainActivity : AppCompatActivity() {
     private fun listing(){
         menuTypeModel= ArrayList()
         menuCatList= ArrayList()
-        itemListModel=ArrayList()
+        itemListModel= ArrayList()
         db.collection("categories").get().addOnSuccessListener {
             for (i in 0..it.documents.size - 1) {
                 menuCatList.add(i, it.documents[i].id.toString())
