@@ -29,8 +29,7 @@ class CategoryAdapterNew  (
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var categoryNameTxt: TextView = view.findViewById(R.id.cat_name)
         var linearMain: LinearLayout =view.findViewById(R.id.linear_main)
-        var arrowUp: ImageView =view.findViewById(R.id.arrow_up)
-        var arrowDown: ImageView =view.findViewById(R.id.arrow_down)
+
         var itemsRecycler: RecyclerView =view.findViewById(R.id.items_rec)
     }
 

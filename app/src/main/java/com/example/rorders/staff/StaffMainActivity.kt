@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
 import com.example.rorders.login.LoginActivity
 import com.example.rorders.staff.adapter.StaffMenuAdapter
+import com.example.rorders.staff.adapter.StaffTypeAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -33,6 +34,7 @@ class StaffMainActivity : AppCompatActivity() {
     lateinit var newOrderBtn:Button
     lateinit var viewOrdersBtn:Button
     lateinit var menuList:ArrayList<String>
+    var backPressedTime: Long = 0
     var menuItemNameList: MutableList<String?> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,15 @@ class StaffMainActivity : AppCompatActivity() {
         init()
         listing()
         Toast.makeText(this, "Staff", Toast.LENGTH_SHORT).show()
+    }
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(this, "Press back again to exit.", Toast.LENGTH_LONG).show()
+        }
+        backPressedTime = System.currentTimeMillis()
     }
     private fun init(){
         menuList= ArrayList()
@@ -78,7 +89,13 @@ class StaffMainActivity : AppCompatActivity() {
                 menuItemNameList = ArrayList()
                 for (ds in dataSnapshot.children) {
                     val menuItem = ds.key
-                    menuItemNameList.add(menuItem.toString())
+                    var type=ds.value
+                    if(menuItemNameList.contains(type.toString())){
+                        Log.e("type","con")
+                    }else{
+                        menuItemNameList.add(type.toString())
+                    }
+
 
                     Log.e("TAG", menuItem.toString())
                     /* Log.e("listchange",menuItemNameList.size.toString())
@@ -88,7 +105,7 @@ class StaffMainActivity : AppCompatActivity() {
                 }
                 Log.e("listchange",menuItemNameList.size.toString())
                 menuRecycler.layoutManager= LinearLayoutManager(nContext)
-                val menuAdapter= StaffMenuAdapter(nContext,menuItemNameList,newOrderBtn)
+                val menuAdapter= StaffTypeAdapter(nContext,menuItemNameList,newOrderBtn)
                 menuRecycler.adapter=menuAdapter
             }
             override fun onCancelled(error: DatabaseError) {

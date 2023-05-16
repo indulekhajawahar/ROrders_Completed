@@ -52,12 +52,15 @@ class SplashActivity : AppCompatActivity() {
                         PreferenceManager.setAdminValue(mContext,"1")
                         val i = Intent(mContext, AdminMainActivity::class.java)
                         startActivity(i)
+                        finish()
                     }else if (userTypeLoggedIn.equals("staff")){
                         val i = Intent(mContext, StaffMainActivity::class.java)
                         startActivity(i)
+                        finish()
                     }else if (userTypeLoggedIn.equals("kitchen")){
                         val i = Intent(mContext, KitchenMainActivity::class.java)
                         startActivity(i)
+                        finish()
                     }
                 }
 

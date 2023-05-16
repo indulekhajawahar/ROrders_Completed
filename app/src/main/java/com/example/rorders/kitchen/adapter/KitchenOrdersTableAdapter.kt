@@ -1,4 +1,4 @@
-package com.example.rorders.admin.adapter
+package com.example.rorders.kitchen.adapter
 
 import android.content.Context
 import android.util.Log
@@ -11,38 +11,45 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
 import com.example.rorders.kitchen.model.TableListModel
-import com.example.rorders.staff.adapter.StaffTableAdapter
-import com.example.rorders.staff.adapter.StaffTableDetailAdapter
+import com.example.rorders.staff.model.OrderDetailModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class AdminDetailTableAdapter (
+class KitchenOrdersTableAdapter (
     private var nContext: Context,
     private var tableList:ArrayList<TableListModel>
 
 ) :
 
-    RecyclerView.Adapter<AdminDetailTableAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<KitchenOrdersTableAdapter.MyViewHolder>() {
     var number:String=""
     lateinit var detailList:MutableList<String>
     lateinit var detailListCount:MutableList<String>
+    lateinit var statusList:MutableList<String>
+    lateinit var orderDetailList:ArrayList<OrderDetailModel>
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tableNum: TextView = view.findViewById(R.id.table_num)
         var detailOrderRec: RecyclerView =view.findViewById(R.id.table_detail_rec)
         var tableBtn: Switch =view.findViewById(R.id.table_btn)
         var staffBtn: Switch =view.findViewById(R.id.delvry_btn)
+        var readyTxt:TextView=view.findViewById(R.id.ready_txt)
+        var delvrdTxt:TextView=view.findViewById(R.id.delvrd_txt)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_staff_table_list, parent, false)
+            .inflate(R.layout.adapter_kitchen_table_list, parent, false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        detailList=ArrayList()
+        detailListCount=ArrayList()
+
         holder.tableBtn.isClickable=false
         holder.staffBtn.isClickable=false
         var tables: TableListModel = tableList.get(position)
@@ -51,49 +58,53 @@ class AdminDetailTableAdapter (
 
         if (tables.tableStatus == "1")
         {
-            Log.e("status1","true")
+            holder.tableBtn.visibility=View.VISIBLE
+            holder.staffBtn.visibility=View.VISIBLE
+            holder.readyTxt.visibility=View.VISIBLE
+            holder.delvrdTxt.visibility=View.VISIBLE
+
             holder.tableBtn.isChecked = true
 
-        } else
+        } else if (tables.tableStatus=="0")
         {
-            Log.e("status1","false")
             holder.tableBtn.isChecked = false
+            holder.staffBtn.isChecked=false
+
+        }else{
+            holder.tableBtn.visibility=View.GONE
+            holder.staffBtn.visibility=View.GONE
+            holder.readyTxt.visibility=View.GONE
+            holder.delvrdTxt.visibility=View.GONE
 
         }
-        orderDetail(holder.detailOrderRec)
 
 
-    }
-
-    override fun getItemCount(): Int {
-        return tableList.size
-    }
-    private fun orderDetail(detailOrderRec: RecyclerView){
         var firebaseDatabase = FirebaseDatabase.getInstance().getReference("OrderDetails").child(number).child("menu")
         //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
         firebaseDatabase.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                /*val value: String? = dataSnapshot.getValue(String::class.java)
-                Log.d("TAG", value.toString())*/
 
-                detailList = ArrayList()
-                detailListCount=ArrayList()
+
+                statusList = ArrayList()
+                orderDetailList = ArrayList()
+
                 for (ds in dataSnapshot.children) {
                     val menuItem = ds.key
                     var value=ds.value
-                    if (menuItem.toString().contains("status")){
-                        Log.e("st","con")
-                    }else{
-                        detailList.add(menuItem.toString())
-                        detailListCount.add(value.toString())
-                        Log.e("num", menuItem.toString())
+                    var statusValue=ds.child("status").value.toString()
+                    if (menuItem.toString()!="status"){
+                        val temp = OrderDetailModel(menuItem.toString(), value.toString(), statusValue)
+
+                        orderDetailList.add(temp)
                     }
 
                 }
+                Log.e("detailsize",orderDetailList.size.toString())
+                holder.detailOrderRec.layoutManager= LinearLayoutManager(nContext)
+                val menuAdapter= KitchenTableDetailAdapter(nContext,detailList,detailListCount,orderDetailList,
+                    holder.tableBtn,number)
+                holder.detailOrderRec.adapter=menuAdapter
 
-                detailOrderRec.layoutManager= LinearLayoutManager(nContext)
-                val menuAdapter= AdminDetailTableDetailAdapter(nContext,detailList,detailListCount)
-                detailOrderRec.adapter=menuAdapter
             }
             override fun onCancelled(error: DatabaseError) {
                 Log.e("cancelled","true")
@@ -101,4 +112,13 @@ class AdminDetailTableAdapter (
 
         })
     }
+
+    override fun getItemCount(): Int {
+        return tableList.size
+    }
+    private fun selectswitch(orderDetailList:ArrayList<OrderDetailModel>){
+
+
+    }
+
 }

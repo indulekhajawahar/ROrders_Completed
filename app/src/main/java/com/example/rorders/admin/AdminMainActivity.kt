@@ -2,11 +2,13 @@ package com.example.rorders.admin
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
@@ -25,9 +27,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import org.json.JSONArray
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class AdminMainActivity : AppCompatActivity() {
     lateinit var signOutBtn: Button
@@ -37,6 +38,7 @@ class AdminMainActivity : AppCompatActivity() {
     lateinit var menuCatList: ArrayList<String>
     lateinit var menuTypeList: ArrayList<String>
     lateinit var menuTypeModel:ArrayList<MenuDetailModel>
+    lateinit var filtered:ArrayList<MenuDetailModel>
     lateinit var itemListModel:ArrayList<ItemListModel>
     var menuItemNameList: MutableList<String?> = ArrayList()
     lateinit var menuItemUpdatedList:ArrayList<String>
@@ -44,6 +46,10 @@ class AdminMainActivity : AppCompatActivity() {
     lateinit var catRecView: RecyclerView
     lateinit var addButton: FloatingActionButton
     lateinit var menuButton: Button
+    lateinit var searchtxt: EditText
+    lateinit var searchbtn: ImageView
+    var doubleBackToExitPressedOnce:Boolean= false
+    var backPressedTime: Long = 0
     var type:String=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,16 +63,41 @@ class AdminMainActivity : AppCompatActivity() {
         init()
         menuUpdate()
 
-       /* if (PreferenceManager.getAdminValue(nContext).equals("1")){
-            updatedListing()
-        }*/
+        searchbtn.setOnClickListener(View.OnClickListener {
+            Log.e("search","clicked")
+            if (menuTypeModel.size > 0) {
+                Log.e("search","not0")
+                filtered = ArrayList<MenuDetailModel>()
+                for (i in menuTypeModel.indices) {
+                    if (menuTypeModel.get(i).type
+                            .lowercase(Locale.getDefault())
+                            .contains(searchtxt.text.toString().lowercase(Locale.getDefault())) || menuTypeModel.get(i).type
+                            .lowercase(Locale.getDefault())
+                            .contains(searchtxt.text.toString().lowercase(Locale.getDefault()))
+                    ) {
+                        filtered.add(menuTypeModel.get(i))
+                    }
+                }
+                menuUpdate()
+                /*cat_recycler.layoutManager = LinearLayoutManager(mContext)
+                var cat_adapter = CategoryListAdapter(mContext,filtered,searchbtn,searchtxt)
+                cat_recycler.adapter = cat_adapter*/
 
-
-        //listing()
-
+            }
+            // AppUtils.hideKeyBoard(mContext)
+        })
 
     }
-  /*  private fun updatedListing(){
+    override fun onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(this, "Press back again to exit.", Toast.LENGTH_LONG).show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
+    /*  private fun updatedListing(){
 
         db.collection("categories").get().addOnSuccessListener {
             for (i in 0..it.documents.size - 1) {
@@ -111,6 +142,8 @@ class AdminMainActivity : AppCompatActivity() {
         catRecView = findViewById(R.id.cat_rec)
         addButton = findViewById(R.id.add_btn)
         menuButton = findViewById(R.id.menu_btn)
+        searchbtn = findViewById(R.id.btnImgsearch)
+        searchtxt = findViewById(R.id.searchEditText)
         menuCatList = ArrayList()
         menuTypeList = ArrayList()
         menuTypeModel= ArrayList()
@@ -167,10 +200,7 @@ class AdminMainActivity : AppCompatActivity() {
         db.collection("categories").get().addOnSuccessListener {
             for (i in 0..it.documents.size - 1) {
                 menuCatList.add(i, it.documents[i].id.toString())
-
             }
-
-
             for (i in menuCatList.indices) {
 
                 var nmodel = MenuDetailModel(menuCatList[i], itemListModel,false)
@@ -272,6 +302,7 @@ class AdminMainActivity : AppCompatActivity() {
                     .add(user)
                     .addOnSuccessListener { documentReference ->
                         Toast.makeText(nContext, "Item added successfully", Toast.LENGTH_SHORT).show()
+                        menuUpdate()
                         dialog.dismiss()
                     }
                     .addOnFailureListener { e ->

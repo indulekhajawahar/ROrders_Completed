@@ -1,34 +1,28 @@
-package com.example.rorders.admin.adapter
+package com.example.rorders.kitchen.adapter
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
+import com.example.rorders.admin.adapter.ItemsAdapter
 import com.example.rorders.admin.model.ItemListModel
 import com.example.rorders.admin.model.ItemStatusModel
-import com.example.rorders.staff.adapter.StaffMenuAdapter
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.snapshots
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
-
-class ItemsAdapter(
+class KitchenMenuItemsAdapter (
     private var mContext: Context,
     private var itemsArrayList: ArrayList<ItemListModel>,
     private var itemList:ArrayList<String>,
-    var itemNameList:ArrayList<ItemStatusModel>,
-    var itemTypeList:ArrayList<String>
+    var itemNameList:ArrayList<ItemStatusModel>
 ) :
 
-    RecyclerView.Adapter<ItemsAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<KitchenMenuItemsAdapter.MyViewHolder>() {
     var isArrowClicked:Boolean=false
 
     lateinit var menuItemNameList:ArrayList<String>
@@ -37,7 +31,7 @@ class ItemsAdapter(
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var itemName: TextView = view.findViewById(R.id.itemname)
-        var switch:Switch=view.findViewById(R.id.select_switch)
+        var switch: Switch =view.findViewById(R.id.select_switch)
 
     }
 
@@ -48,32 +42,28 @@ class ItemsAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.switch.isClickable=true
+
 
         Log.e("itemstotal",itemNameList[position].status)
         holder.itemName.text = itemNameList[position].itemName
         if (itemNameList[position].status=="0"){
-Log.e("st0",itemNameList[position].itemName)
+            holder.switch.isClickable=false
+            Log.e("st0",itemNameList[position].itemName)
             holder.switch.isChecked=false
         }else{
+            holder.switch.isClickable=true
             Log.e("st1",itemNameList[position].itemName)
             holder.switch.isChecked=true
         }
-        for(i in itemNameList.indices){
-            if (itemNameList[i].status=="1"){
-
-            }
-        }
-
         firebaseDatabase = FirebaseDatabase.getInstance().getReference("TodaysMenu")
         holder.switch.setOnCheckedChangeListener( { buttonView, isChecked ->
 
             if (isChecked){
-              itemNameList[position].status="0"
-                firebaseDatabase.child(itemList[position]).setValue(itemTypeList[position]);
+                itemNameList[position].status="0"
+                firebaseDatabase.child(itemList[position]).setValue(true);
 
             }else{
-               itemNameList[position].status="1"
+                itemNameList[position].status="1"
                 firebaseDatabase.child(itemList[position]).removeValue()
 
             }

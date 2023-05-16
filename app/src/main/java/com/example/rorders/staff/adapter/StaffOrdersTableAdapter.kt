@@ -1,4 +1,4 @@
-package com.example.rorders.admin.adapter
+package com.example.rorders.staff.adapter
 
 import android.content.Context
 import android.util.Log
@@ -11,20 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
 import com.example.rorders.kitchen.model.TableListModel
-import com.example.rorders.staff.adapter.StaffTableAdapter
-import com.example.rorders.staff.adapter.StaffTableDetailAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class AdminDetailTableAdapter (
+class StaffOrdersTableAdapter(
     private var nContext: Context,
     private var tableList:ArrayList<TableListModel>
 
 ) :
 
-    RecyclerView.Adapter<AdminDetailTableAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<StaffOrdersTableAdapter.MyViewHolder>() {
     var number:String=""
     lateinit var detailList:MutableList<String>
     lateinit var detailListCount:MutableList<String>
@@ -32,34 +31,22 @@ class AdminDetailTableAdapter (
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tableNum: TextView = view.findViewById(R.id.table_num)
         var detailOrderRec: RecyclerView =view.findViewById(R.id.table_detail_rec)
-        var tableBtn: Switch =view.findViewById(R.id.table_btn)
-        var staffBtn: Switch =view.findViewById(R.id.delvry_btn)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_staff_table_list, parent, false)
+            .inflate(R.layout.adapter_staff__ordertable_list, parent, false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.tableBtn.isClickable=false
-        holder.staffBtn.isClickable=false
+
         var tables: TableListModel = tableList.get(position)
         number=tableList[position].tableNum.toString()
         holder.tableNum.text="Table " + tableList[position].tableNum
 
-        if (tables.tableStatus == "1")
-        {
-            Log.e("status1","true")
-            holder.tableBtn.isChecked = true
 
-        } else
-        {
-            Log.e("status1","false")
-            holder.tableBtn.isChecked = false
-
-        }
         orderDetail(holder.detailOrderRec)
 
 
@@ -92,7 +79,7 @@ class AdminDetailTableAdapter (
                 }
 
                 detailOrderRec.layoutManager= LinearLayoutManager(nContext)
-                val menuAdapter= AdminDetailTableDetailAdapter(nContext,detailList,detailListCount)
+                val menuAdapter= StaffTableDetailAdapter(nContext,detailList,detailListCount)
                 detailOrderRec.adapter=menuAdapter
             }
             override fun onCancelled(error: DatabaseError) {

@@ -38,6 +38,7 @@ var number:String=""
         var tableNum: TextView = view.findViewById(R.id.table_num)
         var detailOrderRec:RecyclerView=view.findViewById(R.id.table_detail_rec)
         var tableBtn:Switch=view.findViewById(R.id.table_btn)
+        var staffBtn:Switch=view.findViewById(R.id.delvry_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -56,13 +57,52 @@ var number:String=""
         {
             Log.e("status1","true")
             holder.tableBtn.isChecked = true
+            holder.staffBtn.isClickable=true
 
-        } else
+        } else if(tables.tableStatus=="0")
         {
             Log.e("status1","false")
             holder.tableBtn.isChecked = false
+            holder.staffBtn.isChecked = false
+            holder.staffBtn.isClickable=false
+
+        }else{
+            holder.tableBtn.isChecked = true
+            holder.staffBtn.isClickable=true
+            holder.staffBtn.isChecked=true
+        }
+        holder.staffBtn.setOnCheckedChangeListener{ buttonView, isChecked ->
+
+            /*database= FirebaseDatabase.getInstance().getReference("StudentLists").
+            child(employee_array.get(position).name.toString()).child("status")*/
+            var database: DatabaseReference
+            if (isChecked)
+            {
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(tableList[position].tableNum)
+                database.child("status").setValue("2")
+                Log.e("Checked_Success",isChecked.toString())
+
+                holder.staffBtn.isChecked = true
+
+                /*database.setValue("0")
+                        holder.switch_button.isChecked=true*/
+
+            }
+            else
+            {
+                database = FirebaseDatabase.getInstance().getReference("OrderDetails").child(tableList[position].tableNum)
+                database.child("status").setValue("0")
+                Log.e("checked_error",isChecked.toString())
+
+                holder.staffBtn.isChecked = false
+                /*database.setValue("1")
+                            holder.switch_button.isChecked=false*/
+
+            }
+
 
         }
+
         orderDetail(holder.detailOrderRec)
 
 

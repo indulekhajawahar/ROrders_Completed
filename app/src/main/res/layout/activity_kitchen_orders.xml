@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Sign out"
+        android:text="GO BACK"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,68 +44,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.12" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/head_con"
+    <TextView
+        android:id="@+id/heading"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/grey"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline6">
-
-        <TextView
-            android:id="@+id/heading"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/grey"
-            android:gravity="center"
-            android:paddingLeft="8dp"
-            android:textAlignment="textStart"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/menu_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/menu_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:background="@color/grey"
-            android:gravity="center"
-            android:paddingLeft="8dp"
-            android:text="View Menu"
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        app:layout_constraintTop_toBottomOf="@+id/guideline6" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_table_rec"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/next_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/head_con" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/next_btn"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="Completed Orders"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heading" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

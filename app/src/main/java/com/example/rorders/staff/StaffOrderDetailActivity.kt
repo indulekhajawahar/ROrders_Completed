@@ -22,8 +22,10 @@ class StaffOrderDetailActivity:AppCompatActivity() {
     lateinit var nContext: Context
     lateinit var heading:TextView
     lateinit var backBtn:Button
+    lateinit var nxtBtn:Button
     lateinit var detailTableRec:RecyclerView
     var tableList: ArrayList<TableListModel> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,13 @@ class StaffOrderDetailActivity:AppCompatActivity() {
         heading=findViewById(R.id.heading)
         heading.text="Order Details"
         backBtn=findViewById(R.id.back_btn)
+        nxtBtn=findViewById(R.id.next_btn)
         backBtn.setOnClickListener {
             val i = Intent(nContext, StaffMainActivity::class.java)
+            startActivity(i)
+        }
+        nxtBtn.setOnClickListener {
+            val i = Intent(nContext, StaffOrdersActivity::class.java)
             startActivity(i)
         }
         detailTableRec=findViewById(R.id.detail_table_rec)
@@ -54,16 +61,21 @@ class StaffOrderDetailActivity:AppCompatActivity() {
                 Log.d("TAG", value.toString())*/
                 Log.e("datchange","true")
                 tableList = ArrayList()
+
                 for (ds in dataSnapshot.children) {
                     var menuItem = ds.key
                     var tableNum:String=""
                     var status=ds.child("status").value.toString()
+                    if (status.toString()=="2"){
 
-                        var nmodel= TableListModel(menuItem.toString(),status)
+                        Log.e("status","2")
+                    }else {
+
+                        var nmodel = TableListModel(menuItem.toString(), status)
                         tableList.add(nmodel)
 
 
-
+                    }
                     Log.e("TAG", menuItem.toString())
                 }
               /*  for (ds in dataSnapshot.children) {

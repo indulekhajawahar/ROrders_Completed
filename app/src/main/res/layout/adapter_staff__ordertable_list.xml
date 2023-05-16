@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,31 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="8dp"
-        android:orientation="horizontal"
-        android:weightSum="3"
         android:background="@drawable/rectangle_border"
+        android:orientation="horizontal"
+        android:weightSum="6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp">
 
         <TextView
-            android:id="@+id/cat_name"
+            android:id="@+id/table_num"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="cat"
-            android:textSize="16sp"
-            android:gravity="center"
+            android:gravity="center|left"
             android:paddingLeft="8dp"
+            android:text="num"
             android:textColor="@color/red"
-            />
+            android:textSize="16sp" />
+
 
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/items_rec"
+        android:id="@+id/table_detail_rec"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/linear_main"/>
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_main" />
 </androidx.constraintlayout.widget.ConstraintLayout>

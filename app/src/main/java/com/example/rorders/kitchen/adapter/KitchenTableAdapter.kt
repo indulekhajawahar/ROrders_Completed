@@ -41,6 +41,7 @@ class KitchenTableAdapter (
         var tableNum: TextView = view.findViewById(R.id.table_num)
         var detailOrderRec: RecyclerView =view.findViewById(R.id.table_detail_rec)
         var tableBtn: Switch =view.findViewById(R.id.table_btn)
+        var staffBtn: Switch =view.findViewById(R.id.delvry_btn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -52,7 +53,9 @@ class KitchenTableAdapter (
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 detailList=ArrayList()
         detailListCount=ArrayList()
-
+        holder.staffBtn.isClickable=false
+holder.tableBtn.visibility=View.VISIBLE
+holder.staffBtn.visibility=View.VISIBLE
         var tables: TableListModel = tableList.get(position)
         number=tableList[position].tableNum.toString()
         holder.tableNum.text="Table " + tableList[position].tableNum
@@ -61,10 +64,14 @@ detailList=ArrayList()
         {
             holder.tableBtn.isChecked = true
 
-        } else
+        } else if (tables.tableStatus=="0")
         {
             holder.tableBtn.isChecked = false
+            holder.staffBtn.isChecked=false
 
+        }else{
+            holder.tableBtn.isChecked = true
+            holder.staffBtn.isChecked = true
         }
         holder.tableBtn.setOnCheckedChangeListener{ buttonView, isChecked ->
 

@@ -24,7 +24,8 @@ import com.google.firebase.database.FirebaseDatabase
 class StaffMenuAdapter (
     private var nContext: Context,
     private var menulist:MutableList<String?>,
-    private var orderBtn:Button
+    private var orderBtn:Button,
+    private var itemList:MutableList<String?>
 
 ) :
 
@@ -78,12 +79,15 @@ class StaffMenuAdapter (
 
 
         orderBtn.setOnClickListener {
+
             for(i in menulist.indices) {
+                Log.e("menuarray",countArray[i].toString())
                 if(countArray[i]!="0") {
                     var nmodel = OrderListModel(menulist[i].toString(), countArray[i])
                     orderArrayList.add(nmodel)
                 }
             }
+            Log.e("orderarray1",orderArrayList.size.toString())
             ordering(orderArrayList)
         }
     }
@@ -91,6 +95,7 @@ class StaffMenuAdapter (
         return menulist.size
     }
 private fun ordering(orderArrayList: ArrayList<OrderListModel>){
+    Log.e("orderarray",orderArrayList.size.toString())
     val dialog = BottomSheetDialog(nContext, R.style.AppBottomSheetDialogTheme)
     dialog.setContentView(R.layout.bottomsheet_order_register)
     dialog.setCancelable(true)
