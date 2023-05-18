@@ -13,6 +13,7 @@ import com.example.rorders.constants.PreferenceManager
 import com.example.rorders.kitchen.KitchenMainActivity
 import com.example.rorders.login.LoginActivity
 import com.example.rorders.staff.StaffMainActivity
+import com.example.rorders.staffnew.StaffMainActivityNew
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -23,7 +24,7 @@ import com.google.firebase.ktx.Firebase
 class SplashActivity : AppCompatActivity() {
 
     lateinit var mContext: Context
-    val SPLASH_TIME_OUT:Long = 3000
+    val SPLASH_TIME_OUT:Long = 2000
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
@@ -54,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(i)
                         finish()
                     }else if (userTypeLoggedIn.equals("staff")){
-                        val i = Intent(mContext, StaffMainActivity::class.java)
+                        val i = Intent(mContext, StaffMainActivityNew::class.java)
                         startActivity(i)
                         finish()
                     }else if (userTypeLoggedIn.equals("kitchen")){

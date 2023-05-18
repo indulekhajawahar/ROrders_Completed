@@ -1,6 +1,7 @@
 package com.example.rorders.admin.model
 
-class ItemStatusModel (
+class ItemStatusModelNew  (
     var itemName:String,
+    var itemType:String,
     var status:String
 )

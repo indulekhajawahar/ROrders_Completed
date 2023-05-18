@@ -1,22 +1,20 @@
-package com.example.rorders.staff
+package com.example.rorders.staffnew
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
 import com.example.rorders.login.LoginActivity
-import com.example.rorders.staff.adapter.StaffMenuAdapter
+import com.example.rorders.staff.StaffOrderDetailActivity
 import com.example.rorders.staff.adapter.StaffTypeAdapter
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.example.rorders.staffnew.adapter.StaffTypeAdapterNew
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -25,34 +23,25 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
-class StaffMainActivity : AppCompatActivity() {
+class StaffMainActivityNew:AppCompatActivity() {
     lateinit var nContext: Context
     private lateinit var auth: FirebaseAuth
     lateinit var signOutBtn: Button
     lateinit var heading: TextView
     lateinit var menuRecycler: RecyclerView
-    lateinit var newOrderBtn:Button
-    lateinit var viewOrdersBtn:Button
+    lateinit var newOrderBtn: Button
+    lateinit var viewOrdersBtn: Button
     lateinit var menuList:ArrayList<String>
     var backPressedTime: Long = 0
     var menuItemNameList: MutableList<String?> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_staff_main)
+        setContentView(R.layout.activity_staff_main_new)
         nContext=this
         auth = Firebase.auth
         init()
         listing()
         Toast.makeText(this, "Staff", Toast.LENGTH_SHORT).show()
-    }
-    override fun onBackPressed() {
-        if (backPressedTime + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed()
-            finish()
-        } else {
-            Toast.makeText(this, "Press back again to exit.", Toast.LENGTH_LONG).show()
-        }
-        backPressedTime = System.currentTimeMillis()
     }
     private fun init(){
         menuList= ArrayList()
@@ -72,13 +61,12 @@ class StaffMainActivity : AppCompatActivity() {
             var intent= Intent(nContext, StaffOrderDetailActivity::class.java)
             startActivity(intent)
         }
-       /* orderBtn.setOnClickListener {
-            ordering()
-        }*/
+        /* orderBtn.setOnClickListener {
+             ordering()
+         }*/
 
     }
     private fun listing(){
-
         var firebaseDatabase = FirebaseDatabase.getInstance().getReference("TodaysMenu")
         //var databaseReference = firebaseDatabase.getReference("TodaysMenu");
         firebaseDatabase.addValueEventListener(object : ValueEventListener {
@@ -90,8 +78,9 @@ class StaffMainActivity : AppCompatActivity() {
                 for (ds in dataSnapshot.children) {
                     val menuItem = ds.key
                     var type=ds.value
+                    Log.e("type","con")
                     if(menuItemNameList.contains(type.toString())){
-                        Log.e("type","con")
+
                     }else{
                         menuItemNameList.add(type.toString())
                     }
@@ -108,7 +97,7 @@ class StaffMainActivity : AppCompatActivity() {
 
                 Log.e("listchange",menuItemNameList.size.toString())
                 menuRecycler.layoutManager= LinearLayoutManager(nContext)
-                val menuAdapter= StaffTypeAdapter(nContext,menuItemNameList,newOrderBtn)
+                val menuAdapter= StaffTypeAdapterNew(nContext,menuItemNameList,newOrderBtn)
                 menuRecycler.adapter=menuAdapter
             }
             override fun onCancelled(error: DatabaseError) {
@@ -116,35 +105,5 @@ class StaffMainActivity : AppCompatActivity() {
             }
 
         })
-        /* Log.e("listad",menuItemNameList.size.toString())
-         menuRecycler.layoutManager=LinearLayoutManager(nContext)
-         var menuAdapter= StaffMenuAdapter(nContext,menuItemNameList)
-         menuRecycler.adapter=menuAdapter*/
     }
-    private fun ordering(){
-        val dialog = BottomSheetDialog(nContext, R.style.AppBottomSheetDialogTheme)
-        val view = layoutInflater.inflate(R.layout.bottomsheet_order_register, null)
-        dialog.setCancelable(true)
-        dialog.setContentView(view)
-        var tableNum=dialog.findViewById<EditText>(R.id.table_name_edt)
-        var submitButton = dialog.findViewById<Button>(R.id.submitButton)
-        var cancelButton = dialog.findViewById<Button>(R.id.cancelButton)
-        cancelButton!!.setOnClickListener {
-            dialog.dismiss()
-        }
-        submitButton!!.setOnClickListener {
-            if (tableNum!!.text.isEmpty()){
-                Toast.makeText(this, "Enter Table Number", Toast.LENGTH_SHORT).show()
-            }else{
-                val i = Intent(nContext, StaffOrderDetailActivity::class.java)
-                startActivity(i)
-            }
-
-        }
-
-
-        dialog.show()
-
-    }
-
 }

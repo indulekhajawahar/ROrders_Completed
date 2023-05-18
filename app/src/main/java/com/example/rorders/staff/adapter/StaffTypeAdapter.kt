@@ -83,6 +83,7 @@ class StaffTypeAdapter (
                      var menuAdapter= StaffMenuAdapter(nContext,menuItemNameList)
                      menuRecycler.adapter=menuAdapter*/
                 }
+
                 Log.e("listchange",menuItemNameList.size.toString())
                 holder.itemsRecycler.layoutManager= LinearLayoutManager(mContext)
                 val menuAdapter= StaffMenuAdapter(mContext,menuItemNameList,newOrdrBtn,itemList)

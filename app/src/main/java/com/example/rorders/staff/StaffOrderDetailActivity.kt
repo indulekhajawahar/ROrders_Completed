@@ -13,6 +13,7 @@ import com.example.rorders.R
 import com.example.rorders.kitchen.model.TableListModel
 import com.example.rorders.staff.adapter.StaffMenuAdapter
 import com.example.rorders.staff.adapter.StaffTableAdapter
+import com.example.rorders.staffnew.StaffMainActivityNew
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -42,7 +43,7 @@ class StaffOrderDetailActivity:AppCompatActivity() {
         backBtn=findViewById(R.id.back_btn)
         nxtBtn=findViewById(R.id.next_btn)
         backBtn.setOnClickListener {
-            val i = Intent(nContext, StaffMainActivity::class.java)
+            val i = Intent(nContext, StaffMainActivityNew::class.java)
             startActivity(i)
         }
         nxtBtn.setOnClickListener {

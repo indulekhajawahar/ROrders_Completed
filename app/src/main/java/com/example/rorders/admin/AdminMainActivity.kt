@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -13,7 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rorders.R
 import com.example.rorders.admin.adapter.CategoryAdapter
+import com.example.rorders.admin.adapter.FilteredItemAdapter
 import com.example.rorders.admin.model.ItemListModel
+import com.example.rorders.admin.model.ItemStatusModel
+import com.example.rorders.admin.model.ItemStatusModelNew
 import com.example.rorders.admin.model.MenuDetailModel
 import com.example.rorders.login.LoginActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AdminMainActivity : AppCompatActivity() {
@@ -35,15 +41,19 @@ class AdminMainActivity : AppCompatActivity() {
     lateinit var nContext: Context
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    lateinit var itemList:ArrayList<String>
+    lateinit var typeList:ArrayList<String>
+    lateinit var itemFilteredList:ArrayList<ItemStatusModel>
     lateinit var menuCatList: ArrayList<String>
     lateinit var menuTypeList: ArrayList<String>
     lateinit var menuTypeModel:ArrayList<MenuDetailModel>
-    lateinit var filtered:ArrayList<MenuDetailModel>
+    lateinit var filtered:ArrayList<ItemStatusModelNew>
     lateinit var itemListModel:ArrayList<ItemListModel>
     var menuItemNameList: MutableList<String?> = ArrayList()
     lateinit var menuItemUpdatedList:ArrayList<String>
     lateinit var item:ItemListModel
     lateinit var catRecView: RecyclerView
+    lateinit var filterRecView: RecyclerView
     lateinit var addButton: FloatingActionButton
     lateinit var menuButton: Button
     lateinit var searchtxt: EditText
@@ -62,32 +72,256 @@ class AdminMainActivity : AppCompatActivity() {
 
         init()
         menuUpdate()
-
         searchbtn.setOnClickListener(View.OnClickListener {
-            Log.e("search","clicked")
-            if (menuTypeModel.size > 0) {
-                Log.e("search","not0")
-                filtered = ArrayList<MenuDetailModel>()
-                for (i in menuTypeModel.indices) {
-                    if (menuTypeModel.get(i).type
-                            .lowercase(Locale.getDefault())
-                            .contains(searchtxt.text.toString().lowercase(Locale.getDefault())) || menuTypeModel.get(i).type
-                            .lowercase(Locale.getDefault())
-                            .contains(searchtxt.text.toString().lowercase(Locale.getDefault()))
-                    ) {
-                        filtered.add(menuTypeModel.get(i))
+            if(searchtxt.text.isEmpty()){
+                catRecView.visibility=View.VISIBLE
+                filterRecView.visibility=View.GONE
+            }else {
+                catRecView.visibility = View.GONE
+                filterRecView.visibility = View.VISIBLE
+
+                catRecView.visibility = View.GONE
+                filterRecView.visibility = View.VISIBLE
+                Log.e("search", "clicked")
+                filtered = ArrayList()
+                if (itemList.size > 0) {
+                    filtered = ArrayList<ItemStatusModelNew>()
+
+                    Log.e("itemsize", itemList.size.toString())
+                    filtered = ArrayList()
+                    for (i in itemList.indices) {
+                        if (itemList.get(i)
+                                .lowercase(Locale.getDefault())
+                                .contains(searchtxt.text.toString().lowercase(Locale.getDefault()))
+                        ) {
+                            var nmodel = ItemStatusModelNew(itemList[i],typeList[i], "0")
+                            filtered.add(nmodel)
+                        }
+                    }
+                    for (j in menuItemNameList.indices) {
+                        for (k in filtered.indices) {
+                            if (menuItemNameList[j] == filtered[k].itemName) {
+                                filtered[k].status = "1"
+                            }
+                        }
+                    }
+                    itemFilteredList = ArrayList()
+                    for (i in 0..filtered.size - 1) {
+                        for (j in 0..itemFilteredList.size - 1) {
+                            if (filtered[i].itemName == itemFilteredList[j].itemName) {
+                                var nmodel =
+                                    ItemStatusModel(filtered[i].itemName, filtered[i].status)
+                                itemFilteredList.add(nmodel)
+                            }
+                        }
+                    }
+                    Log.e("filtersize", itemFilteredList.size.toString())
+                    filterRecView.layoutManager = LinearLayoutManager(nContext)
+                    var cat_adapter = FilteredItemAdapter(nContext, filtered)
+                    filterRecView.adapter = cat_adapter
+
+                }
+            }
+
+        })
+        searchtxt.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                if(searchtxt.text.isEmpty()){
+                    catRecView.visibility=View.VISIBLE
+                    filterRecView.visibility=View.GONE
+                }else {
+                    catRecView.visibility = View.GONE
+                    filterRecView.visibility = View.VISIBLE
+
+
+                    Log.e("search", "clicked")
+                    filtered = ArrayList()
+                    if (itemList.size > 0) {
+                        filtered = ArrayList<ItemStatusModelNew>()
+
+                        Log.e("itemsize", itemList.size.toString())
+                        filtered = ArrayList()
+                        for (i in itemList.indices) {
+                            if (itemList.get(i)
+                                    .lowercase(Locale.getDefault())
+                                    .contains(
+                                        searchtxt.text.toString().lowercase(Locale.getDefault())
+                                    )
+                            ) {
+                                var nmodel = ItemStatusModelNew(itemList[i], typeList[i],"0")
+                                filtered.add(nmodel)
+                            }
+                        }
+                        for (j in menuItemNameList.indices) {
+                            for (k in filtered.indices) {
+                                if (menuItemNameList[j] == filtered[k].itemName) {
+                                    filtered[k].status = "1"
+                                }
+                            }
+                        }
+                        itemFilteredList = ArrayList()
+                        for (i in 0..filtered.size - 1) {
+                            for (j in 0..itemFilteredList.size - 1) {
+                                if (filtered[i].itemName == itemFilteredList[j].itemName) {
+                                    var nmodel =
+                                        ItemStatusModel(filtered[i].itemName, filtered[i].status)
+                                    itemFilteredList.add(nmodel)
+                                }
+                            }
+                        }
+                        Log.e("filtersize", itemFilteredList.size.toString())
+                        filterRecView.layoutManager = LinearLayoutManager(nContext)
+                        var cat_adapter = FilteredItemAdapter(nContext, filtered)
+                        filterRecView.adapter = cat_adapter
+
                     }
                 }
-                menuUpdate()
-                /*cat_recycler.layoutManager = LinearLayoutManager(mContext)
-                var cat_adapter = CategoryListAdapter(mContext,filtered,searchbtn,searchtxt)
-                cat_recycler.adapter = cat_adapter*/
 
             }
-            // AppUtils.hideKeyBoard(mContext)
+
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                // TODO Auto-generated method stub
+            }
         })
 
+        /*searchbtn.setOnClickListener(View.OnClickListener {
+
+            Log.e("search","clicked")
+            menuTypeModel= ArrayList()
+            menuCatList= ArrayList()
+            itemListModel= ArrayList()
+            db.collection("categories").get().addOnSuccessListener {
+                for (i in 0..it.documents.size - 1) {
+
+                        if (it.documents[i].id
+                                .lowercase(Locale.getDefault())
+                                .contains(searchtxt.text.toString().lowercase(Locale.getDefault())) || it.documents[i].id
+                                .lowercase(Locale.getDefault())
+                                .contains(searchtxt.text.toString().lowercase(Locale.getDefault()))
+                        ) {
+                            menuCatList.add(it.documents[i].id.toString())
+                           // filtered.add(menuTypeModel.get(i))
+                        }
+
+
+                }
+                for (i in menuCatList.indices) {
+
+                    var nmodel = MenuDetailModel(menuCatList[i], itemListModel,false)
+
+                    filtered.add(i, nmodel)
+
+                }
+
+                db.collection("Menu").get().addOnSuccessListener {
+                    for (j in filtered.indices) {
+                        for (i in it.documents.indices) {
+                            //Log.e("type", it.documents[i].get("item_name").toString())
+                            if (it.documents[i].get("item_type") == filtered[j].type) {
+                                var temp = ItemListModel(
+                                    it.documents[i].get("item_name").toString(),
+                                    it.documents[i].get("item_cost").toString(),
+                                    it.documents[i].get("item_type").toString()
+                                )
+                                filtered[j].detailList.add(temp)
+
+                            }
+                        }
+                    }
+
+                    Log.e("typelistsize",menuTypeModel.size.toString())
+                    catRecView.layoutManager = LinearLayoutManager(nContext)
+                    var categoryAdapter = CategoryAdapter(nContext, filtered,menuItemNameList)
+                    catRecView.adapter = categoryAdapter
+                }
+
+            }
+
+        })
+        searchtxt.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                menuTypeModel= ArrayList()
+                menuCatList= ArrayList()
+                itemListModel= ArrayList()
+                filtered=ArrayList()
+                db.collection("categories").get().addOnSuccessListener {
+                    for (i in 0..it.documents.size - 1) {
+
+                        if (it.documents[i].id
+                                .lowercase(Locale.getDefault())
+                                .contains(searchtxt.text.toString().lowercase(Locale.getDefault())) || it.documents[i].id
+                                .lowercase(Locale.getDefault())
+                                .contains(searchtxt.text.toString().lowercase(Locale.getDefault()))
+                        ) {
+                            menuCatList.add(it.documents[i].id.toString())
+                            // filtered.add(menuTypeModel.get(i))
+                        }
+
+
+                    }
+                    for (i in menuCatList.indices) {
+
+                        var nmodel = MenuDetailModel(menuCatList[i], itemListModel,false)
+
+                        filtered.add(i, nmodel)
+
+                    }
+
+                    db.collection("Menu").get().addOnSuccessListener {
+                        for (j in filtered.indices) {
+                            for (i in it.documents.indices) {
+                                //Log.e("type", it.documents[i].get("item_name").toString())
+                                if (it.documents[i].get("item_type") == filtered[j].type) {
+                                    var temp = ItemListModel(
+                                        it.documents[i].get("item_name").toString(),
+                                        it.documents[i].get("item_cost").toString(),
+                                        it.documents[i].get("item_type").toString()
+                                    )
+                                    filtered[j].detailList.add(temp)
+
+                                }
+                            }
+                        }
+
+                        Log.e("typelistsize",menuTypeModel.size.toString())
+                        catRecView.layoutManager = LinearLayoutManager(nContext)
+                        var categoryAdapter = CategoryAdapter(nContext, filtered,menuItemNameList)
+                        catRecView.adapter = categoryAdapter
+                    }
+
+                }
+
+                }
+
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                // TODO Auto-generated method stub
+            }
+        })*/
+
     }
+
     override fun onBackPressed() {
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed()
@@ -97,56 +331,23 @@ class AdminMainActivity : AppCompatActivity() {
         }
         backPressedTime = System.currentTimeMillis()
     }
-    /*  private fun updatedListing(){
 
-        db.collection("categories").get().addOnSuccessListener {
-            for (i in 0..it.documents.size - 1) {
-                menuCatList.add(i, it.documents[i].id.toString())
-
-            }
-
-
-            for (i in menuCatList.indices) {
-                var nmodel = MenuDetailModel(menuCatList[i], itemListModel,false)
-                menuTypeModel.add(i, nmodel)
-                Log.e("types", menuTypeModel[i].type)
-            }
-
-            db.collection("Menu").get().addOnSuccessListener {
-                for (j in menuTypeModel.indices) {
-                    for (i in it.documents.indices) {
-                        //Log.e("type", it.documents[i].get("item_name").toString())
-                        if (it.documents[i].get("item_type") == menuTypeModel[j].type) {
-                            var temp = ItemListModel(
-                                it.documents[i].get("item_name").toString(),
-                                it.documents[i].get("item_cost").toString(),
-                                it.documents[i].get("item_type").toString()
-                            )
-                            menuTypeModel[j].detailList.add(temp)
-
-                        }
-                    }
-                }
-
-                Log.e("updatesizeadmin",menuItemUpdatedList.size.toString())
-                catRecView.layoutManager = LinearLayoutManager(nContext)
-                var categoryAdapter = CategoryAdapter(nContext, menuTypeModel,menuItemNameList)
-                catRecView.adapter = categoryAdapter
-            }
-
-        }
-    }*/
 
     private fun init() {
         signOutBtn = findViewById(R.id.signout_btn)
         catRecView = findViewById(R.id.cat_rec)
+        filterRecView = findViewById(R.id.filter_rec)
         addButton = findViewById(R.id.add_btn)
         menuButton = findViewById(R.id.menu_btn)
         searchbtn = findViewById(R.id.btnImgsearch)
         searchtxt = findViewById(R.id.searchEditText)
+        itemList= ArrayList()
+        itemFilteredList= ArrayList()
         menuCatList = ArrayList()
         menuTypeList = ArrayList()
         menuTypeModel= ArrayList()
+        typeList= ArrayList()
+        filtered= ArrayList()
         itemListModel=ArrayList<ItemListModel>()
         menuItemUpdatedList= ArrayList()
 
@@ -194,6 +395,7 @@ class AdminMainActivity : AppCompatActivity() {
          })*/
     }
     private fun listing(){
+        itemList= ArrayList()
         menuTypeModel= ArrayList()
         menuCatList= ArrayList()
         itemListModel= ArrayList()
@@ -210,8 +412,19 @@ class AdminMainActivity : AppCompatActivity() {
             }
 
             db.collection("Menu").get().addOnSuccessListener {
+                itemList= ArrayList()
+                typeList= ArrayList()
                 for (j in menuTypeModel.indices) {
                     for (i in it.documents.indices) {
+                        var item=it.documents[i].get("item_name")
+                        var type=it.documents[i].get("item_type")
+if (itemList.contains(item)){
+    Log.e("item","ex")
+}else{
+    itemList.add(item.toString())
+    typeList.add(type.toString())
+
+}
                         //Log.e("type", it.documents[i].get("item_name").toString())
                         if (it.documents[i].get("item_type") == menuTypeModel[j].type) {
                             var temp = ItemListModel(

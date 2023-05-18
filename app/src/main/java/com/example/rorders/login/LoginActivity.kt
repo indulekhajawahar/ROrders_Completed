@@ -12,6 +12,7 @@ import com.example.rorders.R
 import com.example.rorders.admin.AdminMainActivity
 import com.example.rorders.kitchen.KitchenMainActivity
 import com.example.rorders.staff.StaffMainActivity
+import com.example.rorders.staffnew.StaffMainActivityNew
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -116,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
                             val i = Intent(this@LoginActivity, AdminMainActivity::class.java)
                             startActivity(i)
                         }else if (userType == "staff"){
-                            val i = Intent(this@LoginActivity, StaffMainActivity::class.java)
+                            val i = Intent(this@LoginActivity, StaffMainActivityNew::class.java)
                             startActivity(i)
                         }else if (userType == "kitchen"){
                             val i = Intent(this@LoginActivity, KitchenMainActivity::class.java)
